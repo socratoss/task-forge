@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
                 (
                     "profile_picture",
                     models.ImageField(
-                        blank=True, null=True, upload_to="profile_pictures/"
+                        blank=True, null=True, upload_to="media/"
                     ),
                 ),
                 (
