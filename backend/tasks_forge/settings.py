@@ -29,12 +29,6 @@ INSTALLED_APPS = [
 MEDIA_URL = 'media/'
 MEDIA_ROOT = '/media'
 
-REST_AUTH = {
-    'LOGIN_SERIALIZER': 'user.serializers.LoginSerializer',
-    'USER_DETAILS_SERIALIZER': 'user.serializers.UserSerializer',
-    'PASSWORD_RESET_CONFIRM_URL': 'api/authentication/password/reset/confirm/{uidb64}/{token}/',
-}
-
 AUTH_USER_MODEL = 'user.User'
 
 SESSION_COOKIE_AGE = 28800
