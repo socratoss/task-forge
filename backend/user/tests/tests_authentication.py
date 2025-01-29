@@ -60,7 +60,7 @@ class AuthenticationTests(APITestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         msg = mail.outbox[0]
-        print(msg.body)  # Логирование для отладки
+        print(msg.body)
 
         uidb64, token = extract_reset_tokens(msg.body)
         self.assertIsNotNone(uidb64)
@@ -79,7 +79,7 @@ class AuthenticationTests(APITestCase):
         self.assertIsNotNone(authenticate(username='fbetter777@gmail.com', password=new_password))
 
     def test_password_change(self):
-        self.client.login(username='fbetter777@gmail.com', password='Spoon78Fw_')  # Исправлено
+        self.client.login(username='fbetter777@gmail.com', password='Spoon78Fw_')
 
         response = self.client.post(self.password_change_url, {
             'old_password': 'Spoon78Fw_',

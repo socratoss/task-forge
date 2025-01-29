@@ -21,7 +21,7 @@ class UserTests(APITestCase):
 
     def test_get_user_profile_unauthenticated(self):
         response = self.client.get(self.user_profile_url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Исправлено
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_user_profile(self):
         self.client.force_login(self.admin_user)
