@@ -115,3 +115,9 @@ class AuthenticationTests(APITestCase):
         confirmation_url = re.findall(r'http.*account-confirm-email.*\B', mail.outbox[0].body)[0]
         response = self.client.get(confirmation_url)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+    def test_resend_email_verification(self):
+        response = self.client.post(reverse('resend_email_verification'), {'email': 'user@gmail.com'})
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['detail'], 'Successfully resent email verification.')
