@@ -1,0 +1,42 @@
+[
+{
+    "model": "user.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$h5thCO4izbxbN5tP400SGp$KjH82UKpDsH350Nu9IbQQOTNsnbaeL8o4IOTwrb5Zmk=",
+        "last_login": "2025-01-25T20:19:58.284Z",
+        "is_superuser": true,
+        "username": "admin@gmail.com",
+        "first_name": "Admin",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-25T20:19:36.112Z",
+        "email": "admin@gmail.com",
+        "job_title": "System Administrator",
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "user.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$k3Y4Ue2jJ0D5ketA9KpW3C$+VDnyVM2rYluUxnnaamXlwQGLWz+6bq2IK4d+EYmK+k=",
+        "last_login": "2025-02-01T19:23:40.099Z",
+        "is_superuser": false,
+        "username": "user@gmail.com",
+        "first_name": "User",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-02-01T19:23:19.969Z",
+        "email": "user@gmail.com",
+        "job_title": "User",
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]
