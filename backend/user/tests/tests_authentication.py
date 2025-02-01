@@ -14,7 +14,6 @@ def extract_reset_tokens(url):
         return match.group('uidb64'), match.group('token')
     return None, None
 
-
 class AuthenticationTests(APITestCase):
     fixtures = ['user/tests/fixtures.json']
 
@@ -26,18 +25,19 @@ class AuthenticationTests(APITestCase):
         self.password_reset_url = reverse('rest_password_reset')
         self.password_change_url = reverse('rest_password_change')
         self.signup_url = reverse('rest_register')
+        self.resend_email_verification_url = reverse('rest_resend_email')
 
     def test_login_success(self):
-        response = self.client.post(self.login_url, {'username': 'fbetter777@gmail.com', 'password': 'Spoon78Fw_'})
+        response = self.client.post(self.login_url, {'username': 'user@gmail.com', 'password': 'BnD5Fafg21f'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('key', response.data)
 
     def test_login_invalid_password(self):
-        response = self.client.post(self.login_url, {'username': 'fbetter777@gmail.com', 'password': 'wrongpass'})
+        response = self.client.post(self.login_url, {'username': 'user@gmail.com', 'password': 'wrongpass'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_nonexistent_user(self):
-        response = self.client.post(self.login_url, {'username': 'invalid@gmail.com', 'password': 'Spoon78Fw_'})
+        response = self.client.post(self.login_url, {'username': 'invalid@gmail.com', 'password': 'BnD5Fafg21f'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_logout(self):
@@ -46,21 +46,26 @@ class AuthenticationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['detail'], 'Successfully logged out.')
 
+    def test_logout_on_get(self):
+        self.client.force_login(self.admin_user)
+        url = reverse('rest_logout')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_password_reset(self):
-        response = self.client.post(self.password_reset_url, {'email': 'fbetter777@gmail.com'})
+        response = self.client.post(self.password_reset_url, {'email': 'user@gmail.com'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(response.data['detail'], 'Password reset e-mail has been sent.')
 
     def test_password_reset_confirm(self):
-        old_password = 'Spoon78Fw_'
+        old_password = 'BnD5Fafg21f'
         new_password = 'NewSecurePass123!'
 
-        self.client.post(self.password_reset_url, {'email': 'fbetter777@gmail.com'})
+        self.client.post(self.password_reset_url, {'email': 'user@gmail.com'})
         self.assertEqual(len(mail.outbox), 1)
 
         msg = mail.outbox[0]
-        print(msg.body)
 
         uidb64, token = extract_reset_tokens(msg.body)
         self.assertIsNotNone(uidb64)
@@ -75,22 +80,23 @@ class AuthenticationTests(APITestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertIsNone(authenticate(username='fbetter777@gmail.com', password=old_password))
-        self.assertIsNotNone(authenticate(username='fbetter777@gmail.com', password=new_password))
+        self.assertIsNone(authenticate(username='user@gmail.com', password=old_password))
+        self.assertIsNotNone(authenticate(username='user@gmail.com', password=new_password))
 
     def test_password_change(self):
-        self.client.login(username='fbetter777@gmail.com', password='Spoon78Fw_')
+        self.client.login(username='user@gmail.com', password='BnD5Fafg21f')
 
         response = self.client.post(self.password_change_url, {
-            'old_password': 'Spoon78Fw_',
+            'old_password': 'BnD5Fafg21f',
             'new_password1': 'NewStrongPass123!',
             'new_password2': 'NewStrongPass123!'
         })
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['detail'], 'New password has been saved.')
 
         login_response = self.client.post(self.login_url,
-                                          {'username': 'fbetter777@gmail.com', 'password': 'NewStrongPass123!'})
+                                          {'username': 'user@gmail.com', 'password': 'NewStrongPass123!'})
         self.assertEqual(login_response.status_code, status.HTTP_200_OK)
         self.assertIn('key', login_response.data)
 
