@@ -26,8 +26,8 @@ auth_patterns = [
 api_patterns = [
     path('authentication/', include(auth_patterns)),
     path('user/', include('user.urls')),
+    path('project/', include('project.urls')),
 ]
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),

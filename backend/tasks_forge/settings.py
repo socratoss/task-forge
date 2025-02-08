@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth.registration',
     'user',
+    'project',
 ]
 
 MEDIA_URL = 'media/'
