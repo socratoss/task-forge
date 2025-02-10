@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, get_object_or_404
 from rest_framework.views import APIView
@@ -155,17 +156,48 @@ class AcceptInviteRedirectView(APIView):
 
 
 class AcceptInviteView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk, *args, **kwargs):
+        """
+        Показывает информацию о приглашении.
+        """
         invite = get_object_or_404(ProjectInvite, id=pk)
+
+        # Проверяем, соответствует ли почта приглашения почте авторизованного юзера
         if invite.email != request.user.email:
-            return Response({'error': 'You cannot accept this invitation'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': 'Вы не можете принять это приглашение'}, status=403)
+
+        # Отправляем JSON с информацией о проекте
+        return Response({
+            'invite_id': invite.id,
+            'project': {
+                'id': invite.project.id,
+                'name': invite.project.name,
+                'admin': invite.project.admin.username,
+            },
+            'message': 'Подтвердите своё участие, отправив POST-запрос на этот же endpoint'
+        }, status=200)
+
+    def post(self, request, pk, *args, **kwargs):
+        """
+        Подтверждает участие и добавляет пользователя в проект.
+        """
+        invite = get_object_or_404(ProjectInvite, id=pk)
+
+        if invite.email != request.user.email:
+            return Response({'error': 'Вы не можете принять это приглашение'}, status=403)
 
         project = invite.project
         project.users.add(request.user)
         invite.delete()
 
-        ProjectLog.objects.create(project=project, user=request.user, action="Accepted project invite")
+        # Логируем действие
+        ProjectLog.objects.create(project=project, user=request.user, action="Принял приглашение в проект")
 
-        return redirect(reverse('project-detail', kwargs={'pk': project.id}))
+        return Response({
+            'message': 'Вы успешно присоединились к проекту!',
+            'project_id': project.id,
+            'project_name': project.name,
+            'redirect_url': reverse('project-detail', kwargs={'pk': project.id})
+        }, status=200)

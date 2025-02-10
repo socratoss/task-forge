@@ -4,19 +4,15 @@ from .views import (
     ProjectListCreateView,
     ProjectRetrieveUpdateDestroyView,
     AcceptInviteView,
-    ProjectInviteView,
-    AcceptInviteRedirectView
+    ProjectInviteView
 )
-
 
 router = DefaultRouter()
 
-
 urlpatterns = [
-    path('projects/', ProjectListCreateView.as_view(), name='project-list-create'),
-    path('projects/<int:pk>/', ProjectRetrieveUpdateDestroyView.as_view(), name='project-detail'),
-    path('projects/<int:pk>/invite/', ProjectInviteView.as_view(), name='send-invite'),
-    path('projects/invites/<int:pk>/accept/', AcceptInviteView.as_view(), name='accept-invite'),
-    path('projects/invites/<int:pk>/', AcceptInviteRedirectView.as_view(), name='invite-redirect'),
     path('', include(router.urls)),
-] 
+    path('create/', ProjectListCreateView.as_view(), name='project-list-create'),
+    path('detail/<int:pk>/', ProjectRetrieveUpdateDestroyView.as_view(), name='project-detail'),
+    path('invite/<int:pk>/', ProjectInviteView.as_view(), name='send-invite'),
+    path('accept-invite/<int:pk>/', AcceptInviteView.as_view(), name='accept-invite'),
+]

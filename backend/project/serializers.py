@@ -6,11 +6,11 @@ from .models import Project, ProjectInvite, ProjectLog
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['id', 'email']
+        fields = ('id', 'username', 'email')
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    admin = serializers.StringRelatedField(read_only=True)
+    admin = UserSerializer(read_only=True)
     users = serializers.PrimaryKeyRelatedField(
         queryset=get_user_model().objects.all(),
         many=True,
@@ -19,8 +19,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'key', 'industry', 'admin', 'users', 'created_at', 'updated_at', 'description']
-        read_only_fields = ['id', 'key', 'created_at', 'updated_at', 'admin']
+        fields = ('id', 'name', 'key', 'industry', 'admin', 'users', 'created_at', 'updated_at', 'description')
+        read_only_fields = ('id', 'key', 'created_at', 'updated_at', 'admin')
 
     def create(self, validated_data):
         request_user = self.context['request'].user
