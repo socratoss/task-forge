@@ -1,16 +1,9 @@
-from django.urls import reverse
 from rest_framework import generics, status, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.core.mail import send_mail
-from django.conf import settings
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, get_object_or_404
-from rest_framework.views import APIView
-
-from .models import Project, ProjectInvite, ProjectLog, ProjectUser
-from .serializers import ProjectSerializer, ProjectInviteSerializer
+from .models import Project, ProjectLog, ProjectUser
+from .serializers import ProjectSerializer
 
 
 User = get_user_model()
@@ -99,105 +92,3 @@ class ProjectUserManagementView(viewsets.ModelViewSet):
         ProjectLog.objects.create(project=project, user=request.user,
                                   action=f"Changed role of {user.email} to {new_role}")
         return Response({"status": "User role updated"})
-
-
-class ProjectInviteView(generics.CreateAPIView):
-    serializer_class = ProjectInviteSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def create(self, request, *args, **kwargs):
-        project_id = kwargs.get('pk')
-        email = request.data.get('email')
-
-        if not email:
-            return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
-
-        project = Project.objects.get(id=project_id)
-        if request.user != project.admin:
-            return Response({'error': 'Only the admin can invite users'},
-                            status=status.HTTP_403_FORBIDDEN)
-
-        if request.user.email == email:
-            return Response({'error': 'You cannot invite yourself'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if project.users.filter(email=email).exists():
-            return Response({'error': 'User is already a project member'}, status=status.HTTP_400_BAD_REQUEST)
-
-        invite, created = ProjectInvite.objects.get_or_create(
-            project=project, email=email, defaults={'invited_by': request.user}
-        )
-
-        invite_url = request.build_absolute_uri(
-            reverse('accept-invite', kwargs={'pk': invite.id})
-        )
-
-        send_mail(
-            subject="You're invited to join a project on TeamFix!",
-            message=f"You have been invited to join the project on TeamFix.\n\n"
-                    f"Click the link below to accept the invitation and start collaborating:\n"
-                    f"{invite_url}\n\n"
-                    f"If you did not request this invitation, you can safely ignore this email.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=False,
-        )
-
-        return Response({"message": "Invitation sent!", "invite_url": invite_url})
-
-
-class AcceptInviteRedirectView(APIView):
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, pk, *args, **kwargs):
-        invite = get_object_or_404(ProjectInvite, id=pk)
-        user_exists = User.objects.filter(email=invite.email).exists()
-        next_url = reverse('accept-invite', kwargs={'pk': pk})
-        return redirect(f"/api/authentication/{'login' if user_exists else 'signup'}/?next={next_url}")
-
-
-class AcceptInviteView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk, *args, **kwargs):
-        """
-        Показывает информацию о приглашении.
-        """
-        invite = get_object_or_404(ProjectInvite, id=pk)
-
-        # Проверяем, соответствует ли почта приглашения почте авторизованного юзера
-        if invite.email != request.user.email:
-            return Response({'error': 'Вы не можете принять это приглашение'}, status=403)
-
-        # Отправляем JSON с информацией о проекте
-        return Response({
-            'invite_id': invite.id,
-            'project': {
-                'id': invite.project.id,
-                'name': invite.project.name,
-                'admin': invite.project.admin.username,
-            },
-            'message': 'Подтвердите своё участие, отправив POST-запрос на этот же endpoint'
-        }, status=200)
-
-    def post(self, request, pk, *args, **kwargs):
-        """
-        Подтверждает участие и добавляет пользователя в проект.
-        """
-        invite = get_object_or_404(ProjectInvite, id=pk)
-
-        if invite.email != request.user.email:
-            return Response({'error': 'Вы не можете принять это приглашение'}, status=403)
-
-        project = invite.project
-        project.users.add(request.user)
-        invite.delete()
-
-        # Логируем действие
-        ProjectLog.objects.create(project=project, user=request.user, action="Принял приглашение в проект")
-
-        return Response({
-            'message': 'Вы успешно присоединились к проекту!',
-            'project_id': project.id,
-            'project_name': project.name,
-            'redirect_url': reverse('project-detail', kwargs={'pk': project.id})
-        }, status=200)

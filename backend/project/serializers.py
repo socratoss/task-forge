@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Project, ProjectInvite, ProjectLog
+from .models import Project, ProjectLog
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -52,10 +52,3 @@ class ProjectSerializer(serializers.ModelSerializer):
                 )
 
         return instance
-
-
-class ProjectInviteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProjectInvite
-        fields = ['id', 'project', 'email', 'invited_by', 'created_at', 'accepted']
-        read_only_fields = ['id', 'invited_by', 'created_at', 'accepted']

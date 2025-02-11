@@ -1,4 +1,5 @@
 import uuid
+import re
 from django.db import models
 from django.conf import settings as django_settings
 
@@ -27,26 +28,35 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def generate_unique_key(self):
-        while True:
-            key = uuid.uuid4().hex[:8]
-            if not Project.objects.filter(key=key).exists():
-                return key
+        base_key = re.sub(r'[^A-Za-z0-9]', '', self.name)[:3].upper()
+        unique_part = uuid.uuid4().hex[:5]
+        key = f"{base_key}-{unique_part}"
+
+        while Project.objects.filter(key=key).exists():
+            unique_part = uuid.uuid4().hex[:5]
+            key = f"{base_key}-{unique_part}"
+
+        return key
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None
+        old_name = None  # Будет хранить старое имя проекта
+
+        if not is_new:
+            old_name = Project.objects.filter(pk=self.pk).values_list('name', flat=True).first()
+
         if not self.key:
             self.key = self.generate_unique_key()
+
         super().save(*args, **kwargs)
 
         if is_new:
             ProjectLog.objects.create(project=self, user=self.admin, action="Created project")
-        else:
-            old_project = Project.objects.filter(pk=self.pk).first()
-            if old_project and old_project.name != self.name:
-                ProjectLog.objects.create(
-                    project=self, user=self.admin,
-                    action=f"Changed project name from '{old_project.name}' to '{self.name}'"
-                )
+        elif old_name and old_name != self.name:
+            ProjectLog.objects.create(
+                project=self, user=self.admin,
+                action=f"Changed project name from '{old_name}' to '{self.name}'"
+            )
 
     def __str__(self):
         return self.name
@@ -82,14 +92,3 @@ class ProjectLog(models.Model):
 
     def __str__(self):
         return f"{self.timestamp}: {self.user} - {self.action}"
-
-
-class ProjectInvite(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="invites")
-    email = models.EmailField()
-    invited_by = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    accepted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Invite to {self.project.name} - {self.email}"
