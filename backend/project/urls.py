@@ -1,16 +1,8 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import (
-    ProjectListCreateView,
-    ProjectRetrieveUpdateDestroyView,
-)
-
-
-router = DefaultRouter()
+from django.urls import path
+from .views import ProjectListCreateAPIView, ProjectRetrieveUpdateDestroyAPIView
 
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('create/', ProjectListCreateView.as_view(), name='project-list-create'),
-    path('detail/<int:pk>/', ProjectRetrieveUpdateDestroyView.as_view(), name='project-detail'),
+    path('', ProjectListCreateAPIView.as_view(), name='project-list-create'),
+    path('<int:pk>/', ProjectRetrieveUpdateDestroyAPIView.as_view(), name='project-retrieve-update-destroy'),
 ]
