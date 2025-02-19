@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions
 from django.contrib.auth import get_user_model
+from django.db import models
 from .models import Project, ProjectUser
 from .serializers import ProjectSerializer
 from rest_framework.response import Response
@@ -14,7 +15,7 @@ class ProjectListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Project.objects.filter(users=self.request.user)
+        return Project.objects.filter(models.Q(users=self.request.user) | models.Q(admin=self.request.user)).distinct()
 
     def perform_create(self, serializer):
         project = serializer.save(admin=self.request.user)
@@ -26,7 +27,7 @@ class ProjectRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Project.objects.filter(users=self.request.user)
+        return Project.objects.filter(models.Q(users=self.request.user) | models.Q(admin=self.request.user)).distinct()
 
     def update(self, request, *args, **kwargs):
         kwargs['partial'] = True
