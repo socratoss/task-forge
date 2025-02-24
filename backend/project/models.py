@@ -1,4 +1,6 @@
 import re
+import random
+import string
 from django.db import models
 from django.conf import settings as django_settings
 from .choices import IndustryChoices, RoleChoices
@@ -24,23 +26,37 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def _generate_base_key(self):
-        return re.sub(r"[^A-Z]", "", self.name.upper())[:3]
+    def _generate_base_key(self) -> str:
+        words = re.findall(r"[A-Za-z]+", self.name)
+        if len(words) > 1:
+            base_key = "".join(word[0].upper() for word in words)
+        elif words:
+            base_key = words[0][:3].upper()
+        else:
+            base_key = "X"
 
-    def _generate_project_key(self):
+        return base_key
+
+    def _generate_unique_key(self) -> str:
         base_key = self._generate_base_key()
         key = base_key
-        suffix = 1
+
+        cleaned_name = "".join(re.findall(r"[A-Za-z]+", self.name)).upper()
+        reversed_letters = list(cleaned_name[::-1])
+        idx = 0
 
         while Project.objects.filter(key=key).exists():
-            key = f"{base_key}{suffix}"
-            suffix += 1
+            if idx < len(reversed_letters):
+                key = f"{base_key}{reversed_letters[idx]}"
+                idx += 1
+            else:
+                key = f"{base_key}{random.choice(string.ascii_uppercase)}"
 
-        return key
+        return key[:4]
 
     def save(self, *args, **kwargs):
         if not self.key:
-            self.key = self._generate_project_key()
+            self.key = self._generate_unique_key()
         super().save(*args, **kwargs)
 
     def __str__(self):

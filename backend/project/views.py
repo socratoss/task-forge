@@ -1,13 +1,9 @@
 from rest_framework import generics, permissions
-from django.contrib.auth import get_user_model
-from django.db import models
-from .models import Project, ProjectUser
-from .serializers import ProjectSerializer
 from rest_framework.response import Response
 from rest_framework import status
-
-
-User = get_user_model()
+from project.models import Project, ProjectUser
+from project.serializers import ProjectSerializer
+from project.choices import RoleChoices
 
 
 class ProjectListCreateAPIView(generics.ListCreateAPIView):
@@ -15,11 +11,15 @@ class ProjectListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Project.objects.filter(models.Q(users=self.request.user) | models.Q(admin=self.request.user)).distinct()
+        return (
+            Project.objects.filter(users=self.request.user) |
+            Project.objects.filter(admin=self.request.user)
+        ).distinct()
 
     def perform_create(self, serializer):
+        """Создает проект и автоматически добавляет пользователя как владельца"""
         project = serializer.save(admin=self.request.user)
-        ProjectUser.objects.create(user=self.request.user, project=project, role='owner')
+        ProjectUser.objects.create(user=self.request.user, project=project, role=RoleChoices.OWNER)
 
 
 class ProjectRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -27,10 +27,12 @@ class ProjectRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Project.objects.filter(models.Q(users=self.request.user) | models.Q(admin=self.request.user)).distinct()
+        return (
+            Project.objects.filter(users=self.request.user) |
+            Project.objects.filter(admin=self.request.user)
+        ).distinct()
 
     def update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
         return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
