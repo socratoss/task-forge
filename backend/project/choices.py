@@ -11,6 +11,4 @@ class IndustryChoices(models.TextChoices):
 
 
 class RoleChoices(models.TextChoices):
-    ADMIN = "admin", "Admin"
     MEMBER = "member", "Member"
-    VIEWER = "viewer", "Viewer"

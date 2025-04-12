@@ -1,11 +1,10 @@
-version: '3.8'
-
 services:
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./:/code
+      - media:/code/media
     ports:
       - "8000:8000"
     env_file:
@@ -13,24 +12,23 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    restart: always
 
   db:
-    image: postgres:15
+    image: postgres:17.4
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-tasks_forge_db}
-      POSTGRES_HOST: ${POSTGRES_HOST:-db}
-    env_file:
-      - .env
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1"]
       interval: 5s
       retries: 5
-    restart: always
+      timeout: 3s
 
 volumes:
   postgres_data:
+  media:

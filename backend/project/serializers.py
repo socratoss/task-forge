@@ -1,23 +1,25 @@
 from rest_framework import serializers
+from project.models import Project, ProjectUser
 from user.models import User
-from .models import Project, ProjectUser
-from .choices import RoleChoices
-
-
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ['id', 'name', 'key', 'industry', 'admin', 'description', 'created_at', 'updated_at']
-        read_only_fields = ['key']
+from user.serializers import UserSerializer
+from project.choices import RoleChoices
 
 
 class ProjectUserSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
-    role = serializers.CharField(read_only=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = ProjectUser
-        fields = ['user', 'role']
+        fields = ["user", "role"]
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    users = ProjectUserSerializer(source="project_users", many=True, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = ["id", "name", "key", "industry", "admin", "users", "description", "created_at", "updated_at"]
+        read_only_fields = ["key", "admin"]
 
 
 class ProjectUserCreateSerializer(serializers.ModelSerializer):
@@ -26,7 +28,7 @@ class ProjectUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectUser
-        fields = ['user', 'role']
+        fields = ["user", "role"]
 
 
 class ProjectUserUpdateSerializer(serializers.ModelSerializer):
@@ -34,4 +36,4 @@ class ProjectUserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectUser
-        fields = ['role']
+        fields = ["role"]
