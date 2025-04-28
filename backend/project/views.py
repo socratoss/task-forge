@@ -1,6 +1,10 @@
 from django.db.models import Q
-from rest_framework import generics, permissions, status
+from rest_framework import permissions, status
 from rest_framework.response import Response
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from project.models import Project, ProjectUser
 from project.serializers import (
     ProjectSerializer, ProjectUserSerializer,
@@ -10,7 +14,7 @@ from project.choices import RoleChoices
 from .permissions import IsProjectOwner, IsProjectMemberOrOwner
 
 
-class ProjectListCreateAPIView(generics.ListCreateAPIView):
+class ProjectListCreateAPIView(ListCreateAPIView):
     """
     APIView for creating and getting a list of projects.
     """
@@ -31,7 +35,7 @@ class ProjectListCreateAPIView(generics.ListCreateAPIView):
         )
 
 
-class ProjectRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ProjectRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
     APIView for viewing, updating and deleting a project.
     """
@@ -56,7 +60,7 @@ class ProjectRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
         return super().update(request, *args, **kwargs)
 
 
-class ProjectUserListCreateAPIView(generics.ListCreateAPIView):
+class ProjectUserListCreateAPIView(ListCreateAPIView):
     """
     APIView for listing and adding project members.
     """
@@ -80,7 +84,7 @@ class ProjectUserListCreateAPIView(generics.ListCreateAPIView):
         serializer.save(project=project)
 
 
-class ProjectUserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ProjectUserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
     APIView for viewing, updating and deleting a project member.
     """
