@@ -6,7 +6,7 @@ from project.models import Project, ProjectUser
 
 
 class ProjectTests(APITestCase):
-    fixtures = ["project/tests/users.json", "project/tests/projects.json"]
+    fixtures = ["project/fixtures/users.json", "project/fixtures/projects.json"]
 
     def setUp(self):
         self.admin_user = User.objects.get(pk=1)

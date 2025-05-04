@@ -1,0 +1,50 @@
+[
+    {
+        "model": "user.user",
+        "pk": 1,
+        "fields": {
+            "username": "admin",
+            "email": "admin@example.com",
+            "password": "pbkdf2_sha256$260000$abcd$hashedpassword==",
+            "first_name": "Admin",
+            "last_name": "User",
+            "job_title": "Administrator",
+            "profile_picture": "",
+            "is_active": true,
+            "is_staff": false,
+            "is_superuser": false
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 2,
+        "fields": {
+            "username": "member",
+            "email": "member@example.com",
+            "password": "pbkdf2_sha256$260000$abcd$hashedpassword==",
+            "first_name": "Member",
+            "last_name": "User",
+            "job_title": "Developer",
+            "profile_picture": "",
+            "is_active": true,
+            "is_staff": false,
+            "is_superuser": false
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 3,
+        "fields": {
+            "username": "nonmember",
+            "email": "nonmember@example.com",
+            "password": "pbkdf2_sha256$260000$abcd$hashedpassword==",
+            "first_name": "Non",
+            "last_name": "Member",
+            "job_title": "Outsider",
+            "profile_picture": "",
+            "is_active": true,
+            "is_staff": false,
+            "is_superuser": false
+        }
+    }
+]
