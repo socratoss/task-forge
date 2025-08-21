@@ -1,7 +1,10 @@
 from rest_framework import serializers
+
 from project.models import Project, ProjectUser
+
 from user.models import User
 from user.serializers import UserSerializer
+
 from project.choices import RoleChoices
 
 

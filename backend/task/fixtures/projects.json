@@ -1,0 +1,55 @@
+[
+    {
+        "model": "project.project",
+        "pk": 1,
+        "fields": {
+            "name": "Test Project",
+            "key": "TP",
+            "industry": "IT",
+            "admin": 1,
+            "description": "Main test project",
+            "created_at": "2023-01-01T00:00:00Z",
+            "updated_at": "2023-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "project.project",
+        "pk": 2,
+        "fields": {
+            "name": "Other Project",
+            "key": "OP",
+            "industry": "IT",
+            "admin": 3,
+            "description": "Secondary project",
+            "created_at": "2023-01-01T00:00:00Z",
+            "updated_at": "2023-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "project.projectuser",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "project": 1,
+            "role": "member"
+        }
+    },
+    {
+        "model": "project.projectuser",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "project": 1,
+            "role": "member"
+        }
+    },
+    {
+        "model": "project.projectuser",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "project": 2,
+            "role": "member"
+        }
+    }
+]

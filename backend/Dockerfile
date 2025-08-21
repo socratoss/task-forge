@@ -10,12 +10,16 @@ ENV PYTHONFAULTHANDLER=1 \
   POETRY_VIRTUALENVS_CREATE=false \
   POETRY_CACHE_DIR='/var/cache/pypoetry'
 
+# Установка необходимых пакетов и добавление репозитория PostgreSQL
 RUN apt-get update -o Acquire::http::No-Cache=True && apt-get upgrade -y \
-    && apt-get install -y software-properties-common \
-    && add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main" \
-    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+    && apt-get install -y \
+    curl \
+    gnupg \
+    apt-transport-https \
+    && echo "deb http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+    && curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg \
     && apt-get update -o Acquire::http::No-Cache=True \
-    && apt-get install -y postgresql-client-15 -y
+    && apt-get install -y postgresql-client-15
 
 WORKDIR /code
 COPY . /code
