@@ -1,5 +1,7 @@
 from rest_framework import permissions
+
 from project.models import Project, ProjectUser
+
 from django.core.exceptions import ObjectDoesNotExist
 
 

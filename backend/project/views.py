@@ -1,17 +1,19 @@
 from django.db.models import Q
+
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+
 from project.models import Project, ProjectUser
 from project.serializers import (
     ProjectSerializer, ProjectUserSerializer,
     ProjectUserCreateSerializer, ProjectUserUpdateSerializer
 )
 from project.choices import RoleChoices
-from .permissions import IsProjectOwner, IsProjectMemberOrOwner
+from project.permissions import IsProjectOwner, IsProjectMemberOrOwner
 
 
 class ProjectListCreateAPIView(ListCreateAPIView):
