@@ -12,18 +12,23 @@
         <h1>Welcome</h1>
         <p class="subtitle">Login in your account</p>
 
-        <div class="input-group">
-            <input type="email" placeholder="Email" required>
-        </div>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
 
-        <div class="input-group">
-            <input type="password" placeholder="Password" required>
-        </div>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
 
-        <button class="btn-primary">Log in</button>
+            <button type="submit" class="btn-primary">Log in</button>
+        </form>
 
         <a href="#" class="link">Forgot password?</a>
     </div>
 
+   
+    <script src="assets/js/auth.js"></script>
 </body>
+</html>
 </html>
