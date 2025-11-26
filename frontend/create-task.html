@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Task</title>
+    <title>Create Issue</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-       
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -35,7 +34,7 @@
         .close-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             color: #999;
         }
@@ -44,8 +43,9 @@
             margin: 1rem 0 0.4rem;
             font-size: 0.9rem;
             color: #555;
+            font-weight: 500;
         }
-        .input, select {
+        .input, select, textarea {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid #ddd;
@@ -53,7 +53,7 @@
             background: #f9f9f9;
             font-size: 1rem;
         }
-        .input:focus, select:focus {
+        .input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #635bff;
             box-shadow: 0 0 0 3px rgba(99,91,255,0.15);
@@ -61,10 +61,9 @@
         .row {
             display: flex;
             gap: 1rem;
+            margin-bottom: 1rem;
         }
-        .row > div {
-            flex: 1;
-        }
+        .row > div { flex: 1; }
         .attachment {
             padding: 1rem;
             background: #f4f5f7;
@@ -72,7 +71,9 @@
             text-align: center;
             color: #666;
             margin: 1rem 0;
+            border: 1px dashed #ddd;
         }
+        .attachment a { color: #635bff; text-decoration: none; }
         .btn-group {
             display: flex;
             justify-content: flex-end;
@@ -85,6 +86,7 @@
             border: none;
             padding: 0.7rem 1.5rem;
             cursor: pointer;
+            font-weight: 500;
         }
         .btn-create {
             background: #635bff;
@@ -99,7 +101,6 @@
 </head>
 <body>
 
-  
     <div class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -114,18 +115,18 @@
                     <option>⭐ Task Forge Frontend</option>
                 </select>
 
-                
+               
                 <label>Issue type</label>
                 <select class="input" required>
-                    <option>📚 Story</option>
+                    <option>📖 Story</option>
                     <option>🐛 Bug</option>
-                    <option>🎨 Task</option>
+                    <option>✅ Task</option>
                     <option>⚡ Epic</option>
                 </select>
 
                 
                 <label>Summary</label>
-                <input type="text" class="input" placeholder="What needs to be done?" required>
+                <input type="text" class="input" placeholder="" required>
 
                 
                 <label>Attachment</label>
@@ -133,11 +134,14 @@
                     Drop files to attach or <a href="#">Browse</a>
                 </div>
 
-               
-                <label>Description</label>
-                <textarea class="input" rows="4" placeholder="Add a description..."></textarea>
+                
+                <label>Assignee</label>
+                <input type="text" class="input" placeholder="Unassigned">
 
-              
+                <label>Description</label>
+                <textarea class="input" rows="4" placeholder=""></textarea>
+
+               
                 <div class="row">
                     <div>
                         <label>Priority</label>
@@ -146,6 +150,7 @@
                             <option>High</option>
                             <option>Medium</option>
                             <option>Low</option>
+                            <option>Lowest</option>
                         </select>
                     </div>
                     <div>
@@ -156,15 +161,8 @@
 
                 
                 <label>Due date</label>
-                <input type="date" class="input">
+                <input type="text" class="input" placeholder="Select date">
 
+                
                 <div class="btn-group">
                     <button type="button" class="btn-cancel">Cancel</button>
-                    <button type="submit" class="btn-create">Create</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-</body>
-</html>
