@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+       
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        .logo { font-weight: 600; color: #635bff; }
+        .btn-create {
+            background: #635bff;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 2rem;
+            font-size: 1rem;
+            margin: 1.5rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        th {
+            text-align: left;
+            padding: 1rem;
+            background: #f8f9fa;
+            color: #555;
+            font-weight: 500;
+        }
+        td {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+        }
+        .star { color: #ffd43b; cursor: pointer; }
+        .actions { color: #999; }
+    </style>
+</head>
+<body>
+
+  
+    <header class="header">
+        <div class="logo">Jira</div>
+        <div>
+            <a href="#" class="btn-create">Create</a>
+        </div>
+    </header>
+
+    <div class="container main-content">
+        <h1>Projects</h1>
+
+       
+        <input type="text" class="search-input" placeholder="Search Projects">
+
+       
+        <table>
+            <thead>
+                <tr>
+                    <th><span class="star">★</span> Name</th>
+                    <th>Key</th>
+                    <th>Type</th>
+                    <th>Lead</th>
+                    <th>Project URL</th>
+                    <th class="actions">More actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="star">★</span> Task Forge Frontend</td>
+                    <td>TF</td>
+                    <td>Software</td>
+                    <td>Timur Sandanov</td>
+                    <td><a href="#">https://task-forge.com</a></td>
+                    <td class="actions">...</td>
+                </tr>
+    
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
