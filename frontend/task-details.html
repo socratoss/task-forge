@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK-42</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            background: #fff !important;
+            padding: 0;
+            margin: 0;
+        }
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #fff;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2.2rem;
+            cursor: pointer;
+            color: #c00;
+            font-weight: 300;
+        }
+
+        .main {
+            max-width: 1100px;
+            margin: 100px auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        .task-id {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .status-badge {
+            background: #e3fcef;
+            color: #006644;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem;
+            color: #333;
+        }
+
+        .description-block {
+            background: #f4f5f7;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            min-height: 180px;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .details-panel {
+            background: #f4f5f7;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        .details-tab {
+            background: white;
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+        }
+        .detail-field {
+            margin-bottom: 1.2rem;
+        }
+        .detail-field label {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.4rem;
+        }
+        .detail-field select,
+        .detail-field input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            background: white;
+            font-size: 1rem;
+        }
+
+        .activity-section {
+            grid-column: 1 / -1;
+            margin-top: 3rem;
+        }
+        .comments-area {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            min-height: 150px;
+            border: 1px solid #eee;
+        }
+        .comment-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.75rem;
+            resize: vertical;
+            font-family: inherit;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div>
+            <div style="font-weight: 600; color: #333;">TASK-42</div>
+        </div>
+        <button class="close-btn">×</button>
+    </header>
+
+    <div class="main">
+        <div class="task-header">
+            <div>
+                <h1>Name</h1>
+                <div class="task-id">Implement login page</div>
+            </div>
+            <div class="status-badge">Work in progress</div>
+        </div>
+
+        <div class="content">
+            
+            <div>
+                <div class="section-title">Description</div>
+                <div class="description-block">
+                    Create responsive login form with shared styles and prepare for backend integration.
+                </div>
+            </div>
+
+            
+            <div class="details-panel">
+                <div class="details-tab">Details</div>
+
+                <div class="detail-field">
+                    <label>Assignee</label>
+                    <select>
+                        <option>Unassigned</option>
+                        <option>John Doe</option>
+                        <option>Jane Smith</option>
+                    </select>
+                </div>
+
+                <div class="detail-field">
+                    <label>Priority</label>
+                    <select>
+                        <option>Medium</option>
+                        <option>Highest</option>
+                        <option>High</option>
+                        <option>Low</option>
+                        <option>Lowest</option>
+                    </select>
+                </div>
+
+                <div class="detail-field">
+                    <label>Reporter</label>
+                    <input type="text" value="Current User" readonly style="background:#f9f9f9;">
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="activity-section">
+            <div class="section-title">Activity</div>
+            <div style="font-weight: 600; margin: 1.5rem 0 1rem; color: #333;">Comments</div>
+            <div class="comments-area">
+                <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
